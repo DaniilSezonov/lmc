@@ -1,6 +1,6 @@
 from PIL import ImageGrab
-from config import HORYZONTAL_BLOCKS_COUNT, VERTICAL_BLOCKS_COUNT
-from screen import ScreenModel
+from core.config import HORYZONTAL_BLOCKS_COUNT, VERTICAL_BLOCKS_COUNT
+from core.screen import ScreenModel
 
 
 class ScreenGrabber:
@@ -14,7 +14,7 @@ class ScreenGrabber:
 
     def synchronize(self):
         image = ImageGrab.grab()
-        for model_line in self.screen_model.scree_mesh:
+        for model_line in self.screen_model.screen_mesh.mesh:
             for model_block in model_line:
                 cropped_image = image.crop(
                     box=(model_block.position.x,
