@@ -18,8 +18,8 @@ class ScreenModel:
         self.resolution = resolution
         self.model_size = model_size
         self._screen_mesh = ScreenMesh(self.model_size)
-        self._screen_mesh.exclude_mesh_part(EXCLUDED_MESH_PARTS)
         self.generate_mesh()
+        self._screen_mesh.exclude_mesh_part(EXCLUDED_MESH_PARTS)
 
     def generate_mesh(self):
         self._screen_mesh.set_proportions(

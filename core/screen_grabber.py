@@ -1,4 +1,8 @@
-from PIL import ImageGrab
+from time import time
+
+from PIL import Image
+from mss import mss
+
 from core.config import HORIZONTAL_BLOCKS_COUNT, VERTICAL_BLOCKS_COUNT
 from core.screen import ScreenModel
 
@@ -8,12 +12,13 @@ class ScreenGrabber:
     screen_model = None
 
     def __init__(self):
-        image = ImageGrab.grab()
+        self.monitor = mss().monitors[1]
+        image = self.get_screen_image()
         self.screen_size = image.size
         self.screen_model = ScreenModel(self.screen_size, (HORIZONTAL_BLOCKS_COUNT, VERTICAL_BLOCKS_COUNT))
 
     def synchronize(self):
-        image = ImageGrab.grab()
+        image = self.get_screen_image()
         for model_block in self.screen_model.screen_mesh:
             cropped_image = image.crop(
                 box=(model_block.position.x,
@@ -23,12 +28,13 @@ class ScreenGrabber:
                      )
             )
             avg_color = self.getAverageRGB(cropped_image)
-            model_block.color = tuple(round(c) for c in avg_color)
+            model_block.color = (round(avg_color[0]), round(avg_color[1]), round(avg_color[2]))
+
+    def get_screen_image(self):
+        sct_img = mss().grab(self.monitor)
+        return Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
 
     def getAverageRGB(self, image):
-        """
-        Given PIL Image, return average value of color as (r, g, b)
-        """
         # no. of pixels in image
         npixels = image.size[0] * image.size[1]
         # get colors as [(cnt1, (r1, g1, b1)), ...]

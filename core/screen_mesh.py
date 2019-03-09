@@ -112,11 +112,14 @@ class ScreenMesh:
         self._excludable_mesh.clear()
         for v_index, v_blocks in enumerate(self._full_mesh):
             for h_index, h_block in enumerate(v_blocks):
+                is_usable_block = True
                 for v_exclude_index, h_exclude_index in indexes:
                     if v_exclude_index == v_index and h_exclude_index == h_index:
                         self._excludable_mesh.append(h_block)
-                    else:
-                        self._usable_mesh.append(h_block)
+                        is_usable_block = False
+                        break
+                if is_usable_block:
+                    self._usable_mesh.append(h_block)
 
     def __iter__(self):
         return self._usable_mesh.__iter__()
