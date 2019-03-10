@@ -12,7 +12,8 @@ class ScreenGrabber:
     screen_model = None
 
     def __init__(self):
-        self.monitor = mss().monitors[1]
+        self.mss = mss()
+        self.monitor = self.mss.monitors[1]
         image = self.get_screen_image()
         self.screen_size = image.size
         self.screen_model = ScreenModel(self.screen_size, (HORIZONTAL_BLOCKS_COUNT, VERTICAL_BLOCKS_COUNT))
@@ -31,7 +32,7 @@ class ScreenGrabber:
             model_block.color = (round(avg_color[0]), round(avg_color[1]), round(avg_color[2]))
 
     def get_screen_image(self):
-        sct_img = mss().grab(self.monitor)
+        sct_img = self.mss.grab(self.monitor)
         return Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
 
     def getAverageRGB(self, image):
